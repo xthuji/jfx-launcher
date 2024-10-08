@@ -67,7 +67,7 @@ public class Launcher extends Application {
    */
   public void startApplication() throws Exception {
     // 检测升级
-    checkForUpgrade();
+//    checkForUpgrade();
     ui.setPhase("正在初始化运行环境...");
     ClassLoader loader = loadLibraries();
     Class<?> appClass = loader.loadClass(manifest.getLaunchClass());

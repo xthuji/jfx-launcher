@@ -83,3 +83,29 @@ implementation "com.unclezs:jfx-launcher:1.1.10"
 ```
 --add-modules ALL-SYSTEM --add-opens=java.base/java.lang=com.unclezs.jfx.launcher
 ```
+
+## 打包
+### 打包jar文件到本地maven仓库
+在Gradle的publishing repositories 配置中添加 mavenLocal()，发布时将jar同步到Maven的本地仓库
+打包命令 `gradle publishToMavenLocal`
+
+### 将打包的jar文件复制到gradle的cache目录
+*如果Gradle优先使用的是Maven的本地仓库，可以忽略这个*
+
+Mac上 gradle的cache目录路径: `~/.gradle/caches/modules-2/files-2.1/`
+
+```shell
+jarVersion="1.1.11-SNAPSHOT"
+sourceDirPath="$HOME/work/MyProject/code_mine/github/my-folder/jfx-launcher/build/libs"
+targetDirPath="$HOME/.gradle/caches/modules-2/files-2.1/com.unclezs/jfx-launcher"
+ls -1 "${sourceDirPath}" | while read line ; do
+    originJarPath="${sourceDirPath}/${line}"
+    jarName="${line}"
+    jarDirName=$(sha1sum "${originJarPath}" | awk '{print $1}')
+    if [ ! -d "${targetDirPath}/${jarVersion}/$jarDirName/" ]; then
+        mkdir -p "${targetDirPath}/${jarVersion}/$jarDirName/"
+    fi
+    echo "cp -pf \"${originJarPath}\" \"${targetDirPath}/${jarVersion}/$jarDirName/${jarName}\""
+    cp -pf "${originJarPath}" "${targetDirPath}/${jarVersion}/$jarDirName/${jarName}"
+done
+```

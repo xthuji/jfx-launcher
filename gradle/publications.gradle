@@ -17,6 +17,7 @@ def publicationName = project.name.splitEachLine("-") {
 
 publishing {
   repositories {
+    mavenLocal()
     maven {
       name = "aliyun"
       def releasesRepoUrl = findProperty("aliyun.maven.release")
